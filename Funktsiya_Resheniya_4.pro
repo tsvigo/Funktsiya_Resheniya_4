@@ -24,12 +24,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 //###########################################################################
 ######################################################################################################## отладка
-QMAKE_CXXFLAGS += -fsanitize=undefined
+#QMAKE_CXXFLAGS += -fsanitize=undefined
 QMAKE_CXXFLAGS += -g -fsanitize=address -fno-omit-frame-pointer
 LIBS += -lubsan
-#To enable, e.g., address sanitizer you have to write:
+##To enable, e.g., address sanitizer you have to write:
 CONFIG += sanitizer sanitize_address
-CONFIG+=address_sanitizer
+#CONFIG+=address_sanitizer
+//###########################################################################
+QMAKE_CXXFLAGS += -fsanitize=address
+QMAKE_LDFLAGS += -fsanitize=address
 
 
 
