@@ -128,6 +128,28 @@ bool compareVectorsLL(const std::vector<long long> &vec1, const std::vector<long
     return true;
 }
 //###########################################################################
+// Функция для чтения чисел из бинарного файла
+std::vector<unsigned long long> readNumbersFromFile2(const QString &fileName, size_t count)
+{
+    std::vector<unsigned long long> list_of_synapses;
+    list_of_synapses.reserve(count);
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly)) {
+        std::cerr << "Failed to open file for reading." << std::endl;
+        return list_of_synapses;
+    }
+
+    QDataStream in(&file);
+    unsigned long long number;
+    while (list_of_synapses.size() < count && !in.atEnd()) {
+        in >> number;
+        list_of_synapses.push_back(number);
+    }
+
+    file.close();
+    return list_of_synapses;
+}
 //###########################################################################
 // конец объявлений функций
 //###########################################################################
@@ -139,21 +161,38 @@ Dialog::Dialog(QWidget *parent)
     //########################################################################################################
     std::cout << "Funktsiya_Resheniya_4" << std::endl;
     //########################################################################################################
-    //########################################################################################################
-    // читаем нейроны в вектор
-    std::vector<long long> list_of_neurons;
-    readVectorFromFileLL(list_of_neurons,
-                         "/mnt/6017d124-d970-486e-b68f-59b516dd0511/risunki_Stability_Matrix/"
-                         "chars74k_png_Fnt_Sample1_black-white/300/txt/1/neurons_and_signal.txt");
-    std::cout << "конец чтения нейронов в вектор" << std::endl;
-    ///#################### считываем синапсы из файла в вектор #######################################################
-    std::vector<unsigned long long> list_of_synapses = readVectorFromFileU(
-        "/home/viktor/my_projects_qt_2/Funktsiya_Resheniya_2/synapses.txt");
+    //    std::vector<unsigned long long> list_of_synapses = readVectorFromFileU(
+    //        //    "/home/viktor/my_projects_qt_2/Funktsiya_Resheniya_2/synapses.txt"
+    //        "/home/viktor/my_projects_qt_2/sgenerirovaty_sinapsi/random_sinapsi.bin");
+    //###########################################################################
+    const QString fileName
+        = "/home/viktor/my_projects_qt_2/sgenerirovaty_sinapsi/random_sinapsi.bin"; // Имя бинарного файла
+    const size_t numberCount = 10105;
+
+    // Чтение чисел из бинарного файла
+    std::vector<unsigned long long> list_of_synapses = readNumbersFromFile2(fileName, numberCount);
+
+    // Проверка, что прочитано правильное количество чисел
+    if (list_of_synapses.size() != numberCount) {
+        std::cerr << "File does not contain the expected number of numbers." << std::endl;
+    }
     std::cout << "конец чтения синапсов в вектор" << std::endl;
     std::cout << "//"
                  "#################################################################################"
                  "#######################"
               << std::endl;
+    //########################################################################################################
+    // читаем нейроны в вектор
+    std::vector<unsigned long long> list_of_neurons = readVectorFromFileU(
+        // list_of_neurons,
+        //                "/mnt/6017d124-d970-486e-b68f-59b516dd0511/risunki_Stability_Matrix/"
+        //               "chars74k_png_Fnt_Sample1_black-white/300/txt/1/neurons_and_signal.txt"
+        "/home/viktor/my_projects_qt_2/podacha_signala/combined_numbers.bin");
+    std::cout << "конец чтения нейронов в вектор" << std::endl;
+
+    ///#################### считываем синапсы из файла в вектор #######################################################
+
+    //###########################################################################
     // блок вычисления-решения 200 нейрона
     //###########################################################################//###########################################################################
     //###########################################################################//###########################################################################

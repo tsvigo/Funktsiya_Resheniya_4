@@ -22,3 +22,19 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+//###########################################################################
+######################################################################################################## отладка
+QMAKE_CXXFLAGS += -fsanitize=undefined
+QMAKE_CXXFLAGS += -g -fsanitize=address -fno-omit-frame-pointer
+LIBS += -lubsan
+#To enable, e.g., address sanitizer you have to write:
+CONFIG += sanitizer sanitize_address
+CONFIG+=address_sanitizer
+
+
+
+
+
+
+
+
