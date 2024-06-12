@@ -4,6 +4,7 @@
 #include <QDataStream>
 #include <QDebug>
 #include <QFile>
+#include <fstream>
 #include <iostream>
 //###########################################################################
 // переменные:
@@ -37,7 +38,22 @@ void writeVectorToFileU(const std::vector<unsigned long long> &vec, const QStrin
 
     file.close();
 }
+//###########################################################################
+bool writeVectorToFileLL(const std::vector<long long> &vec, const std::string &filename)
+{
+    std::ofstream outFile(filename, std::ios::binary);
+    if (!outFile) {
+        std::cerr << "Cannot open the file for writing: " << filename << std::endl;
+        return false;
+    }
 
+    size_t size = vec.size();
+    outFile.write(reinterpret_cast<const char *>(&size), sizeof(size));
+    outFile.write(reinterpret_cast<const char *>(vec.data()), size * sizeof(long long));
+
+    outFile.close();
+    return true;
+}
 //###########################################################################
 //###########################################################################
 // 2.) Function to read a vector from a file
@@ -71,6 +87,23 @@ std::vector<unsigned long long> readVectorFromFileU(const QString &filename)
     return vec;
 }
 //###########################################################################
+bool readVectorFromFileLL(std::vector<long long> &vec, const std::string &filename)
+{
+    std::ifstream inFile(filename, std::ios::binary);
+    if (!inFile) {
+        std::cerr << "Cannot open the file for reading: " << filename << std::endl;
+        return false;
+    }
+
+    size_t size;
+    inFile.read(reinterpret_cast<char *>(&size), sizeof(size));
+    vec.resize(size);
+    inFile.read(reinterpret_cast<char *>(vec.data()), size * sizeof(long long));
+
+    inFile.close();
+    return true;
+}
+//###########################################################################
 //###########################################################################
 // 3.) Function to compare two vectors
 // Сравнительные векторы:
@@ -81,6 +114,20 @@ bool compareVectorsU(const std::vector<unsigned long long> &vec1,
 {
     return vec1 == vec2;
 }
+//###########################################################################
+bool compareVectorsLL(const std::vector<long long> &vec1, const std::vector<long long> &vec2)
+{
+    if (vec1.size() != vec2.size()) {
+        return false;
+    }
+    for (size_t i = 0; i < vec1.size(); ++i) {
+        if (vec1[i] != vec2[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+//###########################################################################
 //###########################################################################
 // конец объявлений функций
 //###########################################################################
@@ -94,9 +141,10 @@ Dialog::Dialog(QWidget *parent)
     //########################################################################################################
     //########################################################################################################
     // читаем нейроны в вектор
-    std::vector<unsigned long long> list_of_neurons = readVectorFromFileU(
-        "/mnt/6017d124-d970-486e-b68f-59b516dd0511/risunki_Stability_Matrix/"
-        "chars74k_png_Fnt_Sample1_black-white/300/txt/1/neurons_and_signal.txt");
+    std::vector<long long> list_of_neurons;
+    readVectorFromFileLL(list_of_neurons,
+                         "/mnt/6017d124-d970-486e-b68f-59b516dd0511/risunki_Stability_Matrix/"
+                         "chars74k_png_Fnt_Sample1_black-white/300/txt/1/neurons_and_signal.txt");
     std::cout << "конец чтения нейронов в вектор" << std::endl;
     ///#################### считываем синапсы из файла в вектор #######################################################
     std::vector<unsigned long long> list_of_synapses = readVectorFromFileU(
