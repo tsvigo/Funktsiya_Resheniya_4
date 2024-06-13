@@ -25,16 +25,28 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 //###########################################################################
 ######################################################################################################## отладка
 #QMAKE_CXXFLAGS += -fsanitize=undefined
-QMAKE_CXXFLAGS += -g -fsanitize=address -fno-omit-frame-pointer
-LIBS += -lubsan
+#QMAKE_CXXFLAGS += -g -fsanitize=address -fno-omit-frame-pointer
+#LIBS += -lubsan
 ##To enable, e.g., address sanitizer you have to write:
-CONFIG += sanitizer sanitize_address
+#CONFIG += sanitizer sanitize_address
 #CONFIG+=address_sanitizer
 //###########################################################################
-QMAKE_CXXFLAGS += -fsanitize=address
-QMAKE_LDFLAGS += -fsanitize=address
-
-
+#QMAKE_CXXFLAGS += -fsanitize=address
+#QMAKE_LDFLAGS += -fsanitize=address
+#QMAKE_CXXFLAGS=-fsanitize=memory
+#CONFIG += sanitizer sanitize_undefined
+//###########################################################################
+#CONFIG+=sanitizer 
+//###########################################################################
+# по одному включать:
+#CONFIG+=sanitize_memory
+CONFIG+=sanitize_address
+#CONFIG+=sanitize_thread
+#CONFIG+=sanitize_undefined
+#sanitize_address
+#sanitize_memory
+#sanitize_thread
+#sanitize_undefined
 
 
 

@@ -183,11 +183,15 @@ Dialog::Dialog(QWidget *parent)
               << std::endl;
     //########################################################################################################
     // читаем нейроны в вектор
-    std::vector<unsigned long long> list_of_neurons = readVectorFromFileU(
-        // list_of_neurons,
+    std::vector<long long> list_of_neurons;
+    //    std::vector<long long> list_of_neurons =
+    readVectorFromFileLL(
+        list_of_neurons,
+        //  std::vector<long long> list_of_neurons,
         //                "/mnt/6017d124-d970-486e-b68f-59b516dd0511/risunki_Stability_Matrix/"
         //               "chars74k_png_Fnt_Sample1_black-white/300/txt/1/neurons_and_signal.txt"
-        "/home/viktor/my_projects_qt_2/podacha_signala/combined_numbers.bin");
+        //"/home/viktor/my_projects_qt_2/podacha_signala/combined_numbers.bin"
+        "/home/viktor/my_projects_qt_2/podacha_signala_long_long/combined_numbers.bin");
     std::cout << "конец чтения нейронов в вектор" << std::endl;
 
     ///#################### считываем синапсы из файла в вектор #######################################################
@@ -205,21 +209,33 @@ Dialog::Dialog(QWidget *parent)
         for (neuron_index = 0, synapse_index = 0;
 
              /*,*/ synapse_index < 10100;
-             ++neuron_index, synapse_index = synapse_index + 100)
+             ++neuron_index,
+            synapse_index = synapse_index + 100 // вроде тут ошибка
+        )
 
         { // // ошибка сегментации
 
             //if (synapse_index>10100 )
             if (neuron_index < 200 //&& synapse_index<200
             )
-
-                list_of_neurons.at(var)
-                    //###########################################################################
-                    = list_of_neurons.at(var) //-5310911
-                      + ((list_of_neurons.at(neuron_index)
-                          //  /   // деление
-                          -                                     // вычитаем
-                          list_of_synapses.at(synapse_index))); // + на -
+                //###########################################################################
+                //                try {
+                //                    int value = vec.at(100);  // Это вызовет std::out_of_range
+                //                } catch (const std::out_of_range& e) {
+                //                    std::cerr << "Caught an exception: " << e.what() << '\n';
+                //                }
+                //###########################################################################
+                try {
+                    list_of_neurons.at(var)
+                        //###########################################################################
+                        = list_of_neurons.at(var) //-5310911  // valgrind
+                          + ((list_of_neurons.at(neuron_index)
+                              //  /   // деление
+                              -                                     // вычитаем
+                              list_of_synapses.at(synapse_index))); // + на -
+                } catch (const std::out_of_range &e) {
+                    std::cerr << "Caught an exception: " << e.what() << '\n';
+                }
 
         } //
     }
