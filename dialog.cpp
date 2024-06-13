@@ -6,12 +6,16 @@
 #include <QFile>
 #include <fstream>
 #include <iostream>
+
+#include <stdexcept>
+#include <vector>
 //###########################################################################
 // переменные:
 bool Odin_Uchitelia;
 bool Odin_Programmi;
 int var;
 int neuron_index = 0, synapse_index = 0;
+std::vector<long long> list_of_neurons;
 //###########################################################################
 // функции:
 //###########################################################################
@@ -105,6 +109,25 @@ bool readVectorFromFileLL(std::vector<long long> &vec, const std::string &filena
 }
 //###########################################################################
 //###########################################################################
+// Функция для чтения 205 long long чисел из бинарного файла
+std::vector<long long> read205LongLongFromBinaryFile(const std::string &filename)
+{
+    std::ifstream file(filename, std::ios::binary);
+    if (!file) {
+        throw std::runtime_error("Ошибка открытия бинарного файла.");
+    }
+
+    std::vector<long long> list_of_neurons(205);
+    file.read(reinterpret_cast<char *>(list_of_neurons.data()), 205 * sizeof(long long));
+
+    if (file.gcount() != 205 * sizeof(long long)) {
+        throw std::runtime_error("Недостаточно данных в бинарном файле.");
+    }
+
+    return list_of_neurons;
+}
+//###########################################################################
+//###########################################################################
 // 3.) Function to compare two vectors
 // Сравнительные векторы:
 
@@ -176,6 +199,7 @@ Dialog::Dialog(QWidget *parent)
     if (list_of_synapses.size() != numberCount) {
         std::cerr << "File does not contain the expected number of numbers." << std::endl;
     }
+    std::cout << "list_of_synapses.size() =" << list_of_synapses.size() << std::endl;
     std::cout << "конец чтения синапсов в вектор" << std::endl;
     std::cout << "//"
                  "#################################################################################"
@@ -183,17 +207,29 @@ Dialog::Dialog(QWidget *parent)
               << std::endl;
     //########################################################################################################
     // читаем нейроны в вектор
-    std::vector<long long> list_of_neurons;
-    //    std::vector<long long> list_of_neurons =
-    readVectorFromFileLL(
-        list_of_neurons,
-        //  std::vector<long long> list_of_neurons,
-        //                "/mnt/6017d124-d970-486e-b68f-59b516dd0511/risunki_Stability_Matrix/"
-        //               "chars74k_png_Fnt_Sample1_black-white/300/txt/1/neurons_and_signal.txt"
-        //"/home/viktor/my_projects_qt_2/podacha_signala/combined_numbers.bin"
-        "/home/viktor/my_projects_qt_2/podacha_signala_long_long/combined_numbers.bin");
-    std::cout << "конец чтения нейронов в вектор" << std::endl;
+    //    std::vector<long long> list_of_neurons;
+    //    //    std::vector<long long> list_of_neurons =
+    //    readVectorFromFileLL(
+    //        list_of_neurons,
+    //        //  std::vector<long long> list_of_neurons,
+    //        //                "/mnt/6017d124-d970-486e-b68f-59b516dd0511/risunki_Stability_Matrix/"
+    //        //               "chars74k_png_Fnt_Sample1_black-white/300/txt/1/neurons_and_signal.txt"
+    //        //"/home/viktor/my_projects_qt_2/podacha_signala/combined_numbers.bin"
+    //        "/home/viktor/my_projects_qt_2/podacha_signala_long_long/combined_numbers.bin");
+    //    std::cout << "конец чтения нейронов в вектор" << std::endl;
+    //    std::cout << "list_of_neurons=" << list_of_neurons.size() << std::endl;
+    //###########################################################################
+    try {
+        // Чтение 205 long long чисел из бинарного файла
+        //  std::vector<long long>
+        list_of_neurons = read205LongLongFromBinaryFile(
+            "/home/viktor/my_projects_qt_2/podacha_signala_long_long/combined_numbers.bin");
+        std::cout << "list_of_neurons.size()=" << list_of_neurons.size() << std::endl;
 
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
+    //###########################################################################
     ///#################### считываем синапсы из файла в вектор #######################################################
 
     //###########################################################################
@@ -202,40 +238,37 @@ Dialog::Dialog(QWidget *parent)
     //###########################################################################//###########################################################################
     // проверка - решение
     for (var = 100; // первый for
-         var < 200;
-         ++var) // This is the range of neurons
+         var < 200; //200;
+         ++var)     // This is the range of neurons
     {
         //    if (list_of_neurons->at(200)<0) break;
         for (neuron_index = 0, synapse_index = 0;
 
-             /*,*/ synapse_index < 10100;
+             /*,*/ synapse_index < 10100 //, neuron_index < 200
+             // при включении условия выше 200 нейрон меняется
+             ;
              ++neuron_index,
             synapse_index = synapse_index + 100 // вроде тут ошибка
         )
 
         { // // ошибка сегментации
-
+            //  if ()
+            //    synapse_index = synapse_index + 100; // вроде тут ошибка
             //if (synapse_index>10100 )
-            if (neuron_index < 200 //&& synapse_index<200
-            )
-                //###########################################################################
-                //                try {
-                //                    int value = vec.at(100);  // Это вызовет std::out_of_range
-                //                } catch (const std::out_of_range& e) {
-                //                    std::cerr << "Caught an exception: " << e.what() << '\n';
-                //                }
-                //###########################################################################
-                try {
-                    list_of_neurons.at(var)
-                        //###########################################################################
-                        = list_of_neurons.at(var) //-5310911  // valgrind
-                          + ((list_of_neurons.at(neuron_index)
-                              //  /   // деление
-                              -                                     // вычитаем
-                              list_of_synapses.at(synapse_index))); // + на -
-                } catch (const std::out_of_range &e) {
-                    std::cerr << "Caught an exception: " << e.what() << '\n';
-                }
+            //  if (neuron_index < 200 //&& synapse_index<200
+            //  )
+
+            try {
+                list_of_neurons.at(var)
+                    //###########################################################################
+                    = list_of_neurons.at(var) //-5310911  // valgrind
+                      + ((list_of_neurons.at(neuron_index)
+                          //  /   // деление
+                          -                                     // вычитаем
+                          list_of_synapses.at(synapse_index))); // + на -
+            } catch (const std::out_of_range &e) {
+                //  std::cerr << "Caught an exception: " << e.what() << '\n';
+            }
 
         } //
     }
