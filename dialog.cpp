@@ -219,6 +219,7 @@ Dialog::Dialog(QWidget *parent)
     //    std::cout << "конец чтения нейронов в вектор" << std::endl;
     //    std::cout << "list_of_neurons=" << list_of_neurons.size() << std::endl;
     //###########################################################################
+       // читаем нейроны в вектор
     try {
         // Чтение 205 long long чисел из бинарного файла
         //  std::vector<long long>
