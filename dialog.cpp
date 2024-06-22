@@ -9,6 +9,8 @@
 
 #include <stdexcept>
 #include <vector>
+
+#include <QFileDialog>
 //###########################################################################
 // переменные:
 bool Odin_Uchitelia;
@@ -188,8 +190,14 @@ Dialog::Dialog(QWidget *parent)
     //        //    "/home/viktor/my_projects_qt_2/Funktsiya_Resheniya_2/synapses.txt"
     //        "/home/viktor/my_projects_qt_2/sgenerirovaty_sinapsi/random_sinapsi.bin");
     //###########################################################################
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*
     const QString fileName
-        = "/home/viktor/my_projects_qt_2/sgenerirovaty_sinapsi/random_sinapsi.bin"; // Имя бинарного файла
+        =
+        "/home/viktor/my_projects_qt_2/sgenerirovaty_sinapsi/random_sinapsi.bin"
+        ; // Имя бинарного файла*/
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const size_t numberCount = 10105;
 
     // Чтение чисел из бинарного файла
@@ -220,11 +228,29 @@ Dialog::Dialog(QWidget *parent)
     //    std::cout << "list_of_neurons=" << list_of_neurons.size() << std::endl;
     //###########################################################################
        // читаем нейроны в вектор
+
+    // Вызов диалога выбора файла
+    QString fileName_neyroni = QFileDialog::getOpenFileName(nullptr, "Выберите файл",
+                                                    //"/home/viktor/1_rukoy/"
+                                                    "/home/viktor/1_rukoy/scale/combined_numbers/"
+                                                    ,  "bin Files (*.bin)");
+
+    // Проверка, был ли файл выбран
+    if (!fileName_neyroni.isEmpty()) {
+        qDebug() << "Выбранный файл:" << fileName_neyroni;
+    } else {
+        qDebug() << "Файл не был выбран.";
+    }
+    // Преобразование QString в std::string
+    std::string stdFileName_neyroni = fileName_neyroni.toStdString();
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     try {
         // Чтение 205 long long чисел из бинарного файла
         //  std::vector<long long>
         list_of_neurons = read205LongLongFromBinaryFile(
-            "/home/viktor/my_projects_qt_2/podacha_signala_long_long/combined_numbers.bin");
+          //  "/home/viktor/my_projects_qt_2/podacha_signala_long_long/combined_numbers.bin"
+            stdFileName_neyroni
+            );
         std::cout << "list_of_neurons.size()=" << list_of_neurons.size() << std::endl;
 
     } catch (const std::exception &e) {
