@@ -46,7 +46,7 @@ void writeVectorToFileU(const std::vector<unsigned long long> &vec, const QStrin
 
     file.close();
 }
-//###########################################################################
+//###################### 2 ###################################################
 bool writeVectorToFileLL(const std::vector<long long> &vec, const std::string &filename)
 {
     std::ofstream outFile(filename, std::ios::binary);
@@ -70,7 +70,7 @@ bool writeVectorToFileLL(const std::vector<long long> &vec, const std::string &f
 //                      Открывает файл в режиме только для чтения.
 //                      Использует QDataStream для десериализации размера и элементов вектора.
 //                      Обрабатывает ошибки, если файл не может быть открыт.
-
+///////////////////////////////// 3 ///////////////////////////////////////////////////////////////////////////////////////
 std::vector<unsigned long long> readVectorFromFileU(const QString &filename)
 {
     QFile file(filename);
@@ -94,7 +94,7 @@ std::vector<unsigned long long> readVectorFromFileU(const QString &filename)
     file.close();
     return vec;
 }
-//###########################################################################
+//######################### 4 #################################################
 bool readVectorFromFileLL(std::vector<long long> &vec, const std::string &filename)
 {
     std::ifstream inFile(filename, std::ios::binary);
@@ -112,7 +112,7 @@ bool readVectorFromFileLL(std::vector<long long> &vec, const std::string &filena
     return true;
 }
 //###########################################################################
-//###########################################################################
+//######################## 5 ##################################################
 // Функция для чтения 205 long long чисел из бинарного файла
 std::vector<long long> read205LongLongFromBinaryFile(const std::string &filename)
 {
@@ -131,7 +131,7 @@ std::vector<long long> read205LongLongFromBinaryFile(const std::string &filename
     return list_of_neurons;
 }
 //###########################################################################
-//###########################################################################
+//############################ 6 ##############################################
 // 3.) Function to compare two vectors
 // Сравнительные векторы:
 
@@ -141,7 +141,7 @@ bool compareVectorsU(const std::vector<unsigned long long> &vec1,
 {
     return vec1 == vec2;
 }
-//###########################################################################
+//######################### 7 #################################################
 bool compareVectorsLL(const std::vector<long long> &vec1, const std::vector<long long> &vec2)
 {
     if (vec1.size() != vec2.size()) {
@@ -154,7 +154,7 @@ bool compareVectorsLL(const std::vector<long long> &vec1, const std::vector<long
     }
     return true;
 }
-//###########################################################################
+//############################# 8 ##############################################
 // Функция для чтения чисел из бинарного файла
 std::vector<unsigned long long> readNumbersFromFile2(const QString &fileName, size_t count)
 {
