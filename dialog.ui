@@ -26,6 +26,32 @@
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>460</y>
+     <width>381</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Ошибка.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>250</y>
+     <width>1111</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
